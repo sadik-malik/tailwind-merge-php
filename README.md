@@ -1,4 +1,4 @@
-# tailwind-merge
+# tailwind-merge-php
 
 A PHP port of [tailwind-merge](https://github.com/dcastil/tailwind-merge) — merge Tailwind CSS classes without style conflicts.
 
