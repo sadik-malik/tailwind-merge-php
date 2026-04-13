@@ -1,0 +1,43 @@
+{
+  "name": "piplup/tailwind-merge-php",
+  "description": "PHP port of tailwind-merge: merge Tailwind CSS classes without style conflicts",
+  "type": "library",
+  "license": "MIT",
+  "minimum-stability": "stable",
+  "prefer-stable": true,
+  "homepage": "https://github.com/sadik-malik/tailwind-merge-php",
+  "support": {
+    "issues": "https://github.com/sadik-malik/tailwind-merge-php/issues",
+    "source": "https://github.com/sadik-malik/tailwind-merge-php"
+  },
+  "keywords": [
+    "tailwind",
+    "tailwindcss",
+    "css",
+    "merge",
+    "php"
+  ],
+  "config": {
+    "sort-packages": true,
+    "optimize-autoloader": true
+  },
+  "require": {
+    "php": ">=8.1"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^10.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "TailwindMerge\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "TailwindMerge\\Tests\\": "tests/"
+    }
+  },
+  "scripts": {
+    "test": "vendor/bin/phpunit"
+  }
+}
