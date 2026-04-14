@@ -486,7 +486,8 @@ class TailwindMergeTest extends TestCase
 
         // bg-green-500 overrides bg-blue-500; rounded-lg overrides rounded
         $this->assertStringNotContainsString('bg-blue-500', $result);
-        $this->assertStringNotContainsString(' rounded ', " $result "); // bare rounded gone (space-padded to avoid matching rounded-lg)
+        // 'rounded' should be gone (overridden by rounded-lg); use word-boundary check
+        $this->assertDoesNotMatchRegularExpression('/\\brounded\\b(?!-)/', $result);
         $this->assertStringContainsString('bg-green-500', $result);
         $this->assertStringContainsString('rounded-lg', $result);
         // Non-conflicting classes are preserved
@@ -1374,5 +1375,56 @@ class TailwindMergeTest extends TestCase
     public function testTransformOriginConflict(): void
     {
         $this->assertSame('origin-center', $this->tw->merge('origin-top origin-center'));
+    }
+
+    // =========================================================================
+    // Arbitrary CSS properties  [property:value]  and  [--var:value]
+    // =========================================================================
+
+    public function testArbitraryCssVars(): void
+    {
+        // Two declarations for the same CSS custom property — later wins
+        $this->assertSame('[--grid-column-span:5]', $this->tw->merge('[--grid-column-span:12] [--grid-column-span:5]'));
+    }
+
+    public function testArbitraryCss(): void
+    {
+        // Two declarations for the same CSS property — later wins
+        $this->assertSame('[font-size:2rem]', $this->tw->merge('[font-size:1rem] [font-size:2rem]'));
+    }
+
+    public function testArbitraryCssNoConflictDifferentProperties(): void
+    {
+        // Different properties — both kept
+        $result = $this->tw->merge('[font-size:1rem] [color:red]');
+        $this->assertSame('[font-size:1rem] [color:red]', $result);
+    }
+
+    public function testArbitraryCssWithVariant(): void
+    {
+        // Same property under same variant — later wins
+        $this->assertSame('hover:[font-size:2rem]', $this->tw->merge('hover:[font-size:1rem] hover:[font-size:2rem]'));
+    }
+
+    public function testArbitraryCssVariantsDontConflict(): void
+    {
+        // Same property but different variants — no conflict
+        $result = $this->tw->merge('hover:[font-size:1rem] focus:[font-size:2rem]');
+        $this->assertSame('hover:[font-size:1rem] focus:[font-size:2rem]', $result);
+    }
+
+    public function testArbitraryCssWithKnownClasses(): void
+    {
+        // Arbitrary property mixed with regular classes — each resolves independently
+        $result = $this->tw->merge('p-4 [font-size:1rem] p-8 [font-size:2rem]');
+        $this->assertSame('p-8 [font-size:2rem]', $result);
+    }
+
+    public function testArbitraryCssImportant(): void
+    {
+        // Important modifier scopes separately from non-important
+        $result = $this->tw->merge('[font-size:1rem] ![font-size:2rem]');
+        $this->assertStringContainsString('[font-size:1rem]', $result);
+        $this->assertStringContainsString('![font-size:2rem]', $result);
     }
 }

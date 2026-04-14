@@ -363,4 +363,45 @@ class PrefixTest extends TestCase
         $result = $tw->merge('tw-p-4');
         $this->assertSame('tw-p-4', $result);
     }
+
+    // =========================================================================
+    // Arbitrary CSS properties with v4 prefix
+    // =========================================================================
+
+    public function testV4PrefixArbitraryCssVars(): void
+    {
+        $tw = $this->v4();
+        $this->assertSame('tw:[--grid-column-span:5]', $tw->merge('tw:[--grid-column-span:12] tw:[--grid-column-span:5]'));
+    }
+
+    public function testV4PrefixArbitraryCss(): void
+    {
+        $tw = $this->v4();
+        $this->assertSame('tw:[font-size:2rem]', $tw->merge('tw:[font-size:1rem] tw:[font-size:2rem]'));
+    }
+
+    public function testV4PrefixArbitraryCssWithVariant(): void
+    {
+        $tw = $this->v4();
+        $this->assertSame('tw:hover:[font-size:2rem]', $tw->merge('tw:hover:[font-size:1rem] tw:hover:[font-size:2rem]'));
+    }
+
+    public function testV4PrefixArbitraryCssDifferentPropertiesNoConflict(): void
+    {
+        $tw = $this->v4();
+        $result = $tw->merge('tw:[font-size:1rem] tw:[color:red]');
+        $this->assertSame('tw:[font-size:1rem] tw:[color:red]', $result);
+    }
+
+    public function testV3PrefixArbitraryCssVars(): void
+    {
+        $tw = $this->v3();
+        // In v3 dash-style prefix mode, arbitrary property classes like [--var:value]
+        // don't carry the 'tw-' prefix so they pass through unresolved — both are kept.
+        $result = $tw->merge('tw-p-4 [--grid-column-span:12] [--grid-column-span:5]');
+        $this->assertStringContainsString('[--grid-column-span:12]', $result);
+        $this->assertStringContainsString('[--grid-column-span:5]', $result);
+        // tw-p-4 IS a prefixed class and still resolves normally
+        $this->assertStringContainsString('tw-p-4', $result);
+    }
 }

@@ -74,7 +74,13 @@ class MergeClassList
             }
 
             if ($classGroupId === null) {
-                // Unknown Tailwind class — preserve it
+                // Last chance: arbitrary property classes like [font-size:1rem] or [--var:value]
+                // These have no trie entry but share a group based on the property name.
+                $classGroupId = self::getArbitraryPropertyGroupId($baseClassName);
+            }
+
+            if ($classGroupId === null) {
+                // Truly unknown class — preserve it verbatim
                 array_unshift($result, $originalClassName);
                 continue;
             }
@@ -102,5 +108,41 @@ class MergeClassList
         }
 
         return implode(' ', $result);
+    }
+
+    /**
+     * Detects arbitrary property classes and returns a group ID based on the
+     * CSS property or custom property name, so that duplicate declarations
+     * of the same property resolve correctly.
+     *
+     * '[font-size:1rem]'         → 'arbitrary..font-size'
+     * '[--grid-column-span:12]'  → 'arbitrary..--grid-column-span'
+     * '[#B91C1C]'                → null  (arbitrary value, not a property)
+     * '[&:hover]'                → null  (arbitrary variant selector)
+     */
+    private static function getArbitraryPropertyGroupId(string $baseClassName): ?string
+    {
+        // Must be wrapped in square brackets
+        if (!preg_match('/^\[(.+)\]$/', $baseClassName, $outer)) {
+            return null;
+        }
+
+        $content = $outer[1];
+
+        // Must contain a colon that separates property from value
+        $colonPos = strpos($content, ':');
+        if ($colonPos === false) {
+            return null;
+        }
+
+        $property = substr($content, 0, $colonPos);
+
+        // Valid CSS property names: letters and hyphens only (e.g. font-size, margin-top)
+        // Valid CSS custom properties: start with --
+        if (preg_match('/^[a-zA-Z][a-zA-Z0-9-]*$/', $property) || str_starts_with($property, '--')) {
+            return 'arbitrary..' . $property;
+        }
+
+        return null;
     }
 }
