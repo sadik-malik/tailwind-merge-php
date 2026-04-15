@@ -11,6 +11,24 @@ use TailwindMerge\TailwindMerge;
  * Comprehensive test suite for tailwind-merge PHP port.
  * Mirrors the core test cases from the original JS package.
  */
+/**
+ * TailwindMergeTest — comprehensive end-to-end tests for the TailwindMerge class.
+ *
+ * Each test creates a fresh TailwindMerge instance (via setUp) and exercises a
+ * specific conflict-resolution scenario.  Tests are organised into sections that
+ * mirror the Tailwind CSS documentation categories.
+ *
+ * READING THE TESTS
+ * ─────────────────
+ * Every assertSame call encodes:
+ *   input  → the class string(s) passed to merge()
+ *   output → what the CSS cascade would produce (later class always wins)
+ *
+ * Tests marked "no conflict" assert that BOTH classes are preserved because
+ * they control different CSS properties or are scoped to different variants.
+ *
+ * Tests marked "X overrides Y" assert that class X causes Y to be dropped.
+ */
 class TailwindMergeTest extends TestCase
 {
     private TailwindMerge $tw;

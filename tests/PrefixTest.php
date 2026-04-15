@@ -28,6 +28,10 @@ class PrefixTest extends TestCase
     // v4 variant-style prefix  (tw:flex)
     // =========================================================================
 
+    /**
+     * Helper: creates a TailwindMerge instance configured for Tailwind v4
+     * variant-style prefix 'tw'.  Classes look like: tw:flex, tw:hover:bg-red-500.
+     */
     private function v4(): TailwindMerge
     {
         return TailwindMerge::withConfig(['prefix' => 'tw']);
@@ -201,6 +205,12 @@ class PrefixTest extends TestCase
     // v3 dash-style prefix  (tw-flex)
     // =========================================================================
 
+    /**
+     * Helper: creates a TailwindMerge instance configured for Tailwind v3
+     * dash-style prefix.  Classes look like: tw-flex, hover:tw-bg-red-500.
+     *
+     * @param string $prefix  Defaults to 'tw-'; pass 'tw' to test auto-dash detection.
+     */
     private function v3(string $prefix = 'tw-'): TailwindMerge
     {
         return TailwindMerge::withConfig(['prefix' => $prefix]);
