@@ -22,7 +22,7 @@ echo $tw->merge('px-2 py-1 bg-red-500 hover:bg-dark-red', 'p-3 bg-[#B91C1C]');
 ## Installation
 
 ```bash
-composer require tailwind-merge/tailwind-merge-php
+composer require piplup/tailwind-merge-php
 ```
 
 Or clone and run `composer install`.
