@@ -384,6 +384,19 @@ class PrefixTest extends TestCase
         $this->assertSame('tw:[--grid-column-span:5]', $tw->merge('tw:[--grid-column-span:12] tw:[--grid-column-span:5]'));
     }
 
+
+    public function testV4PrefixAbitraryCssVar(): void
+    {
+        $tw = $this->v4();
+        $this->assertSame('tw:size-[var(--navigation-size)]', $tw->merge("tw:size-5 tw:size-[var(--navigation-size)]"));
+    }
+
+    public function testV4PrefixCssVar(): void
+    {
+        $tw = $this->v4();
+        $this->assertSame('tw:size-(--navigation-size)', $tw->merge("tw:size-5 tw:size-(--navigation-size)"));
+    }
+
     public function testV4PrefixArbitraryCss(): void
     {
         $tw = $this->v4();

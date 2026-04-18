@@ -106,7 +106,7 @@ class ClassGroupUtils
         'rotate',
         'skew-x', 'skew-y',
         'top', 'right', 'bottom', 'left',
-        'inset', 'inset-x', 'inset-y', 'start', 'end',
+        'inset', 'inset-x', 'inset-y', 'start', 'end', 'outline-offset',
     ];
 
     /**

@@ -287,7 +287,7 @@ class DefaultConfig
                 'h' => [['h' => ['auto', $isFrac, 'full', 'screen', 'svh', 'lvh', 'dvh', 'min', 'max', 'fit', $isArbLen, $isArbVarLen, $isNum]]],
                 'min-h' => [['min-h' => ['min', 'max', 'fit', 'full', 'screen', 'svh', 'lvh', 'dvh', $isArbLen, $isArbVarLen, $isNum]]],
                 'max-h' => [['max-h' => ['none', $isFrac, 'full', 'screen', 'svh', 'lvh', 'dvh', 'min', 'max', 'fit', $isArbLen, $isArbVarLen, $isNum]]],
-                'size' => [['size' => ['auto', $isFrac, 'full', 'min', 'max', 'fit', $isArbLen, $isArbVarLen, $isNum]]],
+                'size' => [['size' => ['auto', $isFrac, 'full', 'min', 'max', 'fit', $isArbLen, $isArbVarLen, $isArbVar, $isArb, $isNum]]],
 
                 // -------------------------------------------------------
                 // Typography

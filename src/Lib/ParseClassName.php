@@ -127,6 +127,22 @@ class ParseClassName
             ? $postfixModifierPosition - $modifierStart - ($hasImportantModifier ? 1 : 0)
             : null;
 
+        // Normalize leading '-' placed before the first modifier (e.g. '-focus:...').
+        // Move the '-' onto the base class so the negative-value gate in
+        // ClassGroupUtils can recognize utilities like '-outline-offset-1'.
+        if (!empty($modifiers) && str_starts_with($modifiers[0], '-')) {
+            $modifiers[0] = substr($modifiers[0], 1);
+            if ($modifiers[0] === '') {
+                array_shift($modifiers);
+            }
+            if (!str_starts_with($baseClassName, '-')) {
+                $baseClassName = '-' . $baseClassName;
+                if ($maybePostfixModifierPosition !== null) {
+                    $maybePostfixModifierPosition += 1;
+                }
+            }
+        }
+
         // ── Prefix stripping ──────────────────────────────────────────────────
         $hasPrefix = false;
 

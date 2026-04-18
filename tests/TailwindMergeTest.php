@@ -567,6 +567,38 @@ class TailwindMergeTest extends TestCase
         $this->assertSame('outline-dashed', $result);
     }
 
+    public function testOutlineOffsetFocusNegativeConflict(): void
+    {
+        $result = $this->tw->merge('focus:outline-offset-0 -focus:outline-offset-1');
+        $this->assertSame('-focus:outline-offset-1', $result);
+        $result2 = $this->tw->merge('focus:outline-offset-0 focus:-outline-offset-1');
+        $this->assertSame('focus:-outline-offset-1', $result2);
+    }
+
+    // =========================================================================
+    // Group variants
+    // =========================================================================
+
+    public function testGroupKeepsChildrenVariant(): void
+    {
+        $this->assertSame('group group-hover:bg-red-500', $this->tw->merge('group group-hover:bg-red-500'));
+    }
+
+    public function testNamedGroupKeepsNamedVariant(): void
+    {
+        $this->assertSame('group/button group-hover/button:bg-red-500', $this->tw->merge('group/button group-hover/button:bg-red-500'));
+    }
+
+    public function testGroupHoverConflictsResolveToLater(): void
+    {
+        $this->assertSame('group-hover:bg-blue-500', $this->tw->merge('group-hover:bg-red-500 group-hover:bg-blue-500'));
+    }
+
+    public function testNamedGroupHoverConflictsResolveToLater(): void
+    {
+        $this->assertSame('group-hover/button:bg-blue-500', $this->tw->merge('group-hover/button:bg-red-500 group-hover/button:bg-blue-500'));
+    }
+
     // =========================================================================
     // Cursor
     // =========================================================================
